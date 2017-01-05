@@ -1,6 +1,13 @@
 $(document).ready(function() {
     var pongTable = document.getElementById("pongTable");
     var pongTableContext = pongTable.getContext("2d");
+    //scoreboard variables to track score changes
+    var playerScore = 0;
+    var computerScore = 0;
+    var scoreBoardTracker = 0;
+    var endGameScore = 11;
+    var playerScoreDisplay = document.getElementById("playerScoreDisplay");
+    var computerScoreDisplay = document.getElementById("computerScoreDisplay");
 
     // create paddles
     var Paddle = function(x, y, width, height) {
@@ -99,9 +106,13 @@ $(document).ready(function() {
         // Points scored for collisions against the wall
         if (this.x < 10) {
             // points for player on the right side
+            playerScore++;
+            updateScore();
             resetBall(this)
         } else if (this.x > 850) {
             // points for computer on the left side
+            computerScore++;
+            updateScore();
             resetBall(this)
         }
 
@@ -118,6 +129,9 @@ $(document).ready(function() {
         function ballPaddleCollision(ball, paddle){
             var distX = Math.abs(ball.x - paddle.x - paddle.width / 2);
             var distY = Math.abs(ball.y - paddle.y - paddle.height / 2);
+                        
+            if (ball.x < 10) { return false; }
+            if (ball.x > 850) { return false; }
 
             if (distX > (paddle.width / 2 + this.radius)) { return false; }
             if (distY > (paddle.height / 2 + this.radius)) { return false; }
@@ -152,17 +166,44 @@ $(document).ready(function() {
 
     var ball = new Ball();
 
+    function updateScore() {
+      computerScoreDisplay.innerHTML = "Computer score: " + computerScore;
+      playerScoreDisplay.innerHTML = "Player score: " + playerScore;
+      displayMessage();
+    };
+    
+    
+
+    function displayMessage() {
+      if (computerScore === endGameScore) {
+        pongTableContext.font = 'bold 35pt Helvetica';
+        pongTableContext.fillText('You Lost!', 320, 200);
+        pongTableContext.font = 'bold 20pt Helvetica';
+        pongTableContext.fillText('Want to play again?  Refresh the page to start a new game.', 70, 330);
+      } else if (playerScore === endGameScore) {
+        pongTableContext.font = 'bold 35pt Helvetica';
+        pongTableContext.fillText('You Won!', 320, 200);
+        pongTableContext.font = 'bold 20pt Helvetica';
+        pongTableContext.fillText('Want to play again?  Refresh the page to start a new game.', 70, 330);
+      }
+    };
+
     function step() {
         pongTableContext.clearRect(0, 0, 850, 550);
-        ball.move();
-        computer.update();
+        displayMessage();
         player.render();
         computer.render();
         ball.render();
-        animate(step);
+        //animate(step);
+        if (computerScore < endGameScore && playerScore < endGameScore) {
+          ball.move();
+          computer.update();
+          animate(step);
+        }
     }
-
-    step();
+    
+    animate(step);
+    
 
     window.addEventListener('keydown', function(event) {
         if (event.keyCode === 38) {
