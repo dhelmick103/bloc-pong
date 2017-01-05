@@ -6,6 +6,7 @@ $(document).ready(function() {
     var computerScore = 0;
     var scoreBoardTracker = 0;
     var endGameScore = 11;
+
     var playerScoreDisplay = document.getElementById("playerScoreDisplay");
     var computerScoreDisplay = document.getElementById("computerScoreDisplay");
 
@@ -108,11 +109,13 @@ $(document).ready(function() {
             // points for player on the right side
             playerScore++;
             updateScore();
+            playerScoreDisplay.innerHTML = "Player score: " + playerScore;
             resetBall(this)
         } else if (this.x > 850) {
             // points for computer on the left side
             computerScore++;
             updateScore();
+            computerScoreDisplay.innerHTML = "Computer score: " + computerScore;
             resetBall(this)
         }
 
@@ -201,9 +204,14 @@ $(document).ready(function() {
           animate(step);
         }
     }
+
     
     animate(step);
     
+
+    step();
+    computerScoreDisplay.innerHTML = "Computer score: " + computerScore;
+    playerScoreDisplay.innerHTML = "Player score: " + playerScore;
 
     window.addEventListener('keydown', function(event) {
         if (event.keyCode === 38) {
