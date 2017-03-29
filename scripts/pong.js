@@ -6,7 +6,6 @@ $(document).ready(function() {
     var computerScore = 0;
     var scoreBoardTracker = 0;
     var endGameScore = 11;
-    
     var playerScoreDisplay = document.getElementById("playerScoreDisplay");
     var computerScoreDisplay = document.getElementById("computerScoreDisplay");
 
